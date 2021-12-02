@@ -3,12 +3,12 @@ use std::fs;
 fn main() -> Result<(), std::io::Error> {
     let mut input: Vec<(String, i64)> = Vec::new();
     let file = fs::read_to_string("day02_input.txt")?;
-    // file.lines()
-    //     .map(|x| x.split(" ").parse::<i64>().unwrap())
-    //     .for_each(|x| input.push(x));
     for line in file.lines() {
         let mut split = line.split(" ");
-        input.push((split.next().unwrap().to_owned(), split.next().unwrap().parse::<i64>().unwrap()))
+        input.push((
+            split.next().unwrap().to_owned(),
+            split.next().unwrap().parse::<i64>().unwrap(),
+        ))
     }
 
     let mut s = Submarine::new();
@@ -16,7 +16,7 @@ fn main() -> Result<(), std::io::Error> {
     for m in &input {
         let (direction, distance) = m;
         s.move_submarine(direction.to_string(), *distance);
-    };
+    }
 
     println!("The submarines position is {}", s.sub_dot());
 
@@ -25,7 +25,7 @@ fn main() -> Result<(), std::io::Error> {
     for m in &input {
         let (direction, distance) = m;
         aim_s.move_submarine(direction.to_string(), *distance);
-    };
+    }
 
     println!("The aiming submarines position is {}", aim_s.sub_dot());
 
@@ -113,9 +113,8 @@ mod test {
         for m in moves {
             let (direction, distance) = m;
             s.move_submarine(direction, distance);
-        };
+        }
         assert_eq!(s.sub_dot(), 150);
-        
     }
 
     #[test]
@@ -132,8 +131,7 @@ mod test {
         for m in moves {
             let (direction, distance) = m;
             s.move_submarine(direction, distance);
-        };
+        }
         assert_eq!(s.sub_dot(), 900);
-        
     }
 }
