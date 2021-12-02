@@ -12,6 +12,11 @@ fn main() -> Result<(), std::io::Error> {
     let w_n = count_greater_windowed(&input, 3);
     println!("There are {} greater instances with a window of 3.", w_n);
 
+    // Or just using the window function
+    let ws: Vec<i64> = input.windows(3).map(|x| x.iter().sum::<i64>()).collect();
+    let ws_n = count_greater(&ws);
+    println!("There are {} greater instances with a window of 3 using rust iterator windows.", ws_n);
+
     Ok(())
 }
 
