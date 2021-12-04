@@ -109,31 +109,31 @@ impl BingoBoards {
                 for j in 0..b.cols {
                     if b.get(i, j) == &value {
                         p.set(1, i, j);
-                    }
-                    // Now check if they have won..
-                    // We only need to check the intersectoin
-                    // of this i and j.
-                    let mut row_total = 0;
-                    for row in 0..p.cols {
-                        row_total += p.get(row, j);
-                    }
-                    if (row_total as usize) == p.rows {
-                        // println!("We won with number {} on board {}!", value, board_idx);
-                        self.winning_idx = Some(board_idx);
-                        self.winning_number = Some(value);
-                        self.won[board_idx] = true;
-                        board_won = true;
-                    }
-                    let mut col_total = 0;
-                    for col in 0..p.rows {
-                        col_total += p.get(i, col);
-                    }
-                    if (col_total as usize) == p.cols {
-                        // println!("We won with number {} on board {}!", value, board_idx);
-                        self.winning_idx = Some(board_idx);
-                        self.winning_number = Some(value);
-                        self.won[board_idx] = true;
-                        board_won = true;
+                        // Now check if they have won..
+                        // We only need to check the intersection
+                        // of this i and j.
+                        let mut row_total = 0;
+                        for row in 0..p.cols {
+                            row_total += p.get(row, j);
+                        }
+                        if (row_total as usize) == p.rows {
+                            println!("We won with number {} on board {}!", value, board_idx);
+                            self.winning_idx = Some(board_idx);
+                            self.winning_number = Some(value);
+                            self.won[board_idx] = true;
+                            board_won = true;
+                        }
+                        let mut col_total = 0;
+                        for col in 0..p.rows {
+                            col_total += p.get(i, col);
+                        }
+                        if (col_total as usize) == p.cols {
+                            println!("We won with number {} on board {}!", value, board_idx);
+                            self.winning_idx = Some(board_idx);
+                            self.winning_number = Some(value);
+                            self.won[board_idx] = true;
+                            board_won = true;
+                        }
                     }
                 }
             }
@@ -259,7 +259,9 @@ mod test {
     use super::*;
     #[test]
     fn test_row_win() {
-        let mut bingo = BingoBoards::from_strings(&vec![String::from("0 8\n11 5"), String::from("0 1\n2 3")]).unwrap();
+        let mut bingo =
+            BingoBoards::from_strings(&vec![String::from("0 8\n11 5"), String::from("0 1\n2 3")])
+                .unwrap();
         for m in vec![2, 3, 0] {
             if bingo.check_boards(m) {
                 break;
@@ -273,7 +275,9 @@ mod test {
 
     #[test]
     fn test_col_win() {
-        let mut bingo = BingoBoards::from_strings(&vec![String::from("0 8\n11 5"), String::from("0 1\n2 3")]).unwrap();
+        let mut bingo =
+            BingoBoards::from_strings(&vec![String::from("0 8\n11 5"), String::from("0 1\n2 3")])
+                .unwrap();
         for m in vec![1, 3] {
             if bingo.check_boards(m) {
                 break;
@@ -285,11 +289,3 @@ mod test {
         assert_eq!(product, 6);
     }
 }
-
-
-// 7,4,9,5,11,(17),(23),2,0,(14),(21),(24),(10),(16),(13),6,15,25,12,22,18,20,8,19,3,26,1
-// 22 (13) (17) (11) ( 0)         3 15 ( 0) ( 2)22        (14) (21) (17) (24) ( 4)
-//  8 ( 2)(23) ( 4) (24)        ( 9) 18 (13) (17) ( 5)        (10) (16) 15 ( 9) 19
-// (21) ( 9) (14) (16)  (7)        19  8  (7) 25 (23)        18  8 (23) 26 20
-//  6 (10)  3 18 ( 5)        20 (11) (10) (24) ( 4)        22 (11) (13)  6 ( 5)
-//  1 12 20 15 19        (14) (21) 16 12  6        ( 2)( 0) 12  3  (7)
