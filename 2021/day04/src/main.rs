@@ -107,7 +107,7 @@ impl BingoBoards {
             }
             for i in 0..b.rows {
                 for j in 0..b.cols {
-                    if b.get(i, j) == &value {
+                    if (b.get(i, j) == &value) && (p.get(i, j) == &0) {
                         p.set(1, i, j);
                         // Now check if they have won..
                         // We only need to check the intersection
@@ -117,22 +117,23 @@ impl BingoBoards {
                             row_total += p.get(row, j);
                         }
                         if (row_total as usize) == p.rows {
-                            println!("We won with number {} on board {}!", value, board_idx);
+                            println!("We won with number {} on board {} -!", value, board_idx);
                             self.winning_idx = Some(board_idx);
                             self.winning_number = Some(value);
                             self.won[board_idx] = true;
                             board_won = true;
-                        }
-                        let mut col_total = 0;
-                        for col in 0..p.rows {
-                            col_total += p.get(i, col);
-                        }
-                        if (col_total as usize) == p.cols {
-                            println!("We won with number {} on board {}!", value, board_idx);
-                            self.winning_idx = Some(board_idx);
-                            self.winning_number = Some(value);
-                            self.won[board_idx] = true;
-                            board_won = true;
+                        } else {
+                            let mut col_total = 0;
+                            for col in 0..p.rows {
+                                col_total += p.get(i, col);
+                            }
+                            if (col_total as usize) == p.cols {
+                                println!("We won with number {} on board {} +!", value, board_idx);
+                                self.winning_idx = Some(board_idx);
+                                self.winning_number = Some(value);
+                                self.won[board_idx] = true;
+                                board_won = true;
+                            }
                         }
                     }
                 }
