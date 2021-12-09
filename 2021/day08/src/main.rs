@@ -14,15 +14,13 @@ fn main() -> BoxResult<()> {
     let lengths = vec![2, 3, 4, 7];
     let mut total = 0;
     for o in &outputs {
-        // println!("{:?}", o);
         let sum = o
             .iter()
             .map(|s| lengths.contains(&s.chars().count()) as usize)
             .sum::<usize>();
-        // println!("Sum: {}", sum);
         total += sum;
     }
-    println!("{}", total);
+    println!("Total of 1, 4, 7, 8 in output: {}", total);
 
     // Part 2
     let mut n_list = Vec::new();
@@ -63,7 +61,6 @@ fn main() -> BoxResult<()> {
             .collect::<Vec<HashSet<char>>>();
 
         let four = nums.entry(4).or_default().clone();
-        // println!("{:?}", zero_and_nine);
         set_zero_and_nine(&zero_and_nine, &four, &mut nums);
 
         let len_five = nsets
@@ -92,22 +89,12 @@ fn main() -> BoxResult<()> {
         n_list.push(n_val);
     }
     let total: u64 = n_list.iter().sum();
-    println!("Total output {}", total);
+    println!("Total of all output: {}", total);
     Ok(())
 }
 
-// def two_five(two_and_five, c) -> Tuple[Set[str], Set[str]]:
-// two, five = {}, {}
-// for s in two_and_five:
-//     if len(c - s) == 0:
-//         two = s
-//     else:
-//         five = s
-// return two, five
-
 fn get_num(num: &HashSet<char>, nums: &HashMap<u8, HashSet<char>>) -> String {
     for (k, v) in nums {
-        // println!("{:?}", num);
         if v == num {
             return k.to_string();
         }
