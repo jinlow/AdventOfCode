@@ -25,6 +25,7 @@ fn main() -> BoxResult<()> {
 
     let mut map = Matrix::from_vec(data.to_vec(), rows, cols);
 
+    // Part 1
     println!("{}", map);
     for _ in 0..100 {
         map.step(1, 0, 9);
@@ -32,7 +33,7 @@ fn main() -> BoxResult<()> {
 
     println!("Total Flashes: {}", map.flashes);
 
-    // Loop through all elements collecting the low points
+    // Part 2 - See if we can get it in under 400 runs.
     let mut map = Matrix::from_vec(data, rows, cols);
     for i in 0..400 {
         if map.step(1, 0, 9) {
@@ -45,6 +46,8 @@ fn main() -> BoxResult<()> {
 }
 
 // Simple contiguous matrix, that I made for the bingo problem.
+// Probably don't need this to be generic, but it gives flexability 
+// to use it in a different context during another day.
 struct Matrix<T> {
     data: Vec<T>,
     rows: usize,
@@ -62,7 +65,7 @@ where
         + std::cmp::PartialOrd
         + std::fmt::Display
         + std::ops::Add<Output = T>,
-    <T as FromStr>::Err: 'static + std::error::Error, // <T as FromStr>::Err: std::error::Error
+    <T as FromStr>::Err: 'static + std::error::Error,
 {
     pub fn from_vec(data: Vec<T>, rows: usize, cols: usize) -> Self {
         Matrix {
@@ -78,7 +81,8 @@ where
     pub fn step(&mut self, incrementer: T, min_value: T, max_value: T) -> bool {
         let mut flash_set: HashSet<(usize, usize)> = HashSet::new();
         self.increment(incrementer, max_value, &mut flash_set);
-        // Now check for flashes
+        // Now flash all initial flash points, recursively flashing
+        // other points as needed.
         for (i, j) in flash_set.clone() {
             self.flash(incrementer, min_value, max_value, &mut flash_set, i, j);
         }
