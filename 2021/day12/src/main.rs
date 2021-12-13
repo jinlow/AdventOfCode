@@ -53,7 +53,6 @@ fn main() {
     println!("Total Paths with 1 small cave : {}", finished_paths.len());
 
     // Part 2
-
     let mut all_paths: VecDeque<FullPath> = VecDeque::new();
     for l in start_links.clone() {
         let path = FullPath::from_start(l, true);
