@@ -34,16 +34,16 @@ fn main() {
         }
     }
 
-    while q.len() > 0 {
-        let smallest = dist
-            .iter()
-            .filter(|(k, _)| s.contains(k).not())
-            .min_by(|a, b| a.1.cmp(&b.1))
-            .map(|(k, _)| k).unwrap();
-        q.remove(smallest);
-        s.insert(*smallest);
-        // println!("{:?}", smallest);
-    }
+    // while q.len() > 0 {
+    //     let smallest = dist
+    //         .iter()
+    //         .filter(|(k, _)| s.contains(k).not())
+    //         .min_by(|a, b| a.1.cmp(&b.1))
+    //         .map(|(k, _)| k).unwrap();
+    //     q.remove(smallest);
+    //     s.insert(*smallest);
+    //     // println!("{:?}", smallest);
+    // }
 
     // let mut p = CavePath::new();
     // loop {
