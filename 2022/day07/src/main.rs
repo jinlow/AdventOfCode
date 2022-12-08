@@ -173,7 +173,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     // P2
     let free_size = 30000000 - (70000000 - fsys.dirs[0].total_size);
-    println!("{}", free_size);
+    // println!("{}", free_size);
     let mut delete_dirs = sizes
         .iter()
         .zip(sizes_names)
@@ -181,7 +181,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         .map(|(x, name)| (*x, name))
         .collect::<Vec<(usize, String)>>();
     delete_dirs.sort_by(|a, b| a.0.cmp(&b.0));
-    //delete_dirs.reverse();
-    println!("{:?}", delete_dirs[0..3].to_vec());
+    // Size of that directory, don't worry about name...
+    println!("{:?}", delete_dirs[0]);
     Ok(())
 }
