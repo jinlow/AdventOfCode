@@ -1,7 +1,7 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 use std::error::Error;
 use std::fs;
-use std::hash::Hash;
+
 fn main() -> Result<(), Box<dyn Error>> {
     let file = fs::read_to_string("input.txt")?;
     // P1
