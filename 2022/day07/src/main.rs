@@ -183,5 +183,71 @@ fn main() -> Result<(), Box<dyn Error>> {
     delete_dirs.sort_by(|a, b| a.0.cmp(&b.0));
     // Size of that directory, don't worry about name...
     println!("{:?}", delete_dirs[0]);
+
+    // Simplified Version....
+    // I think we can do this with a lot less code, now that I know exactly
+    // what is needed.
+    let file = fs::read_to_string("input.txt")?;
+    let mut dirs = HashMap::<String, usize>::new();
+    let mut cwd = vec![""];
+    for l in file.lines() {
+        if is_command(l) {
+            match cd_command(l) {
+                Some(d) => {
+                    if d == ".." {
+                        cwd.pop();
+                    } else {
+                        cwd.push(d);
+                    }
+                }
+                // Don't worry about ls commands...
+                None => continue,
+            }
+        } else {
+            // Otherwise we are just listing files, and directories...
+            // We don't really care about "dirs", as we will figure
+            // this out with the full path later.
+            if l.starts_with("dir") {
+                continue;
+            // Otherwise it's a file.
+            } else {
+                let file_info = l.split(" ").collect::<Vec<&str>>();
+                let size = file_info[0].parse::<usize>()?;
+                let dir_name = cwd.join("/");
+                let dir_size = dirs.get_mut(&dir_name);
+                match dir_size {
+                    Some(v) => *v += size,
+                    None => {
+                        dirs.insert(dir_name, size);
+                    }
+                };
+            }
+        }
+        let mut sizes = Vec::new();
+        for d in dirs.keys() {
+            let mut dir_size = 0;
+            for (dir_name, s) in dirs.iter() {
+                if dir_name.starts_with(d) {
+                    dir_size += s;
+                }
+            }
+            sizes.push(dir_size);
+        }
+    }
+
+    // P1
+    let l1k = sizes.iter().filter(|x| x < &&100000).sum::<usize>();
+    println!("{}", l1k);
+
+    // P2
+    let free_size = 30000000 - (70000000 - sizes.iter().max().unwrap());
+    let mut delete_dirs = sizes
+        .iter()
+        .filter(|x| x >= &&free_size)
+        .map(|x| *x)
+        .collect::<Vec<usize>>();
+    delete_dirs.sort();
+    println!("{}", delete_dirs[0]);
+
     Ok(())
 }
