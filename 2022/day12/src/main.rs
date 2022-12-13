@@ -43,7 +43,9 @@ impl Node {
 
 impl Ord for Node {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-        self.steps_to_node.cmp(&other.steps_to_node).then_with(|| self.key.cmp(&other.key))
+        self.steps_to_node
+            .cmp(&other.steps_to_node)
+            .then_with(|| self.key.cmp(&other.key))
     }
 }
 
@@ -71,40 +73,34 @@ fn main() -> Result<(), Box<dyn Error>> {
             elevation.insert((i, j), v);
         }
     }
-    println!("start: {:?}, end: {:?}", start, end);
+    // println!("start: {:?}, end: {:?}", start, end);
 
     let mut shortest_paths = HashMap::<(usize, usize), usize>::new();
     let mut heap = BinaryHeap::new();
     heap.push(Reverse(Node::new(start, 0)));
-    let mut visited_nodes = HashSet::<(usize, usize)>::new();
-    loop {
+    shortest_paths.insert(start, 0);
+    let mut previous_node = HashMap::new();
+    while !heap.is_empty() {
         let node = match heap.pop() {
             Some(Reverse(x)) => x,
             None => break,
         };
-        if node.key == end {
-            break;
-        }
-        visited_nodes.insert(node.key);
         let neighbors = get_neighbors(&node.key, &graph_max);
+        // println!("{:?}, {:?}", node, neighbors);
         for n in neighbors {
-            if visited_nodes.contains(&n) {
+            // Is this a valid neighbor...
+            let node_e = elevation.get(&node.key).unwrap();
+            let n_e = elevation.get(&n).unwrap();
+            if *n_e > (node_e + &1) {
                 continue;
             }
-            let steps_to_neighbor = node.steps_to_node + 1;
-            let e = *elevation.get(&n).unwrap();
-            // If elevation is higher than one more than your
-            // current elevation, we cannot visit this neighbor...
-            if e > *elevation.get(&node.key).unwrap() + 1 {
-                continue;
-            }
-            let v = match shortest_paths.get(&n) {
-                Some(v) => *v,
-                None => usize::MAX,
-            };
-            if steps_to_neighbor < v {
-                shortest_paths.insert(n, steps_to_neighbor);
-                heap.push(Reverse(Node::new(n, steps_to_neighbor)));
+            // This should exist...
+            let new_shortest_path = shortest_paths.get(&node.key).unwrap() + &1;
+            let neighbor_shortest_path = *shortest_paths.get(&n).unwrap_or(&usize::MAX);
+            if new_shortest_path < neighbor_shortest_path {
+                heap.push(Reverse(Node::new(n, neighbor_shortest_path)));
+                shortest_paths.insert(n, new_shortest_path);
+                previous_node.insert(n, node.key);
             }
         }
     }
